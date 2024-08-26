@@ -13,11 +13,6 @@ class ListItemMatchStrategy implements MatchStrategyInterface
     protected $stringUtil;
 
     /**
-     * @var int
-     */
-    protected $similarityThreshold;
-
-    /**
      * @var float
      */
     protected $lengthRatioThreshold;
@@ -31,14 +26,12 @@ class ListItemMatchStrategy implements MatchStrategyInterface
      * ListItemMatchStrategy constructor.
      *
      * @param MbStringUtil $stringUtil
-     * @param int          $similarityThreshold
      * @param float        $lengthRatioThreshold
      * @param float        $commonTextRatioThreshold
      */
-    public function __construct($stringUtil, $similarityThreshold = 80, $lengthRatioThreshold = 0.1, $commonTextRatioThreshold = 0.6)
+    public function __construct($stringUtil, $lengthRatioThreshold = 0.1, $commonTextRatioThreshold = 0.6)
     {
         $this->stringUtil = $stringUtil;
-        $this->similarityThreshold = $similarityThreshold;
         $this->lengthRatioThreshold = $lengthRatioThreshold;
         $this->commonTextRatioThreshold = $commonTextRatioThreshold;
     }
@@ -51,6 +44,14 @@ class ListItemMatchStrategy implements MatchStrategyInterface
      */
     public function isMatch($a, $b)
     {
+        // Short strings match better with a threshold of 100, while longer strings match better with a threshold of 60
+        // See ADR #7 for more information
+        $strlenA = $this->stringUtil->strlen($a);
+        $strlenB = $this->stringUtil->strlen($b);
+        $localSimilarityThreshold = $strlenA > 70 && $strlenB > 70
+            ? 60
+            : 100;
+
         $percentage = null;
 
         // Strip tags and check similarity
@@ -58,13 +59,13 @@ class ListItemMatchStrategy implements MatchStrategyInterface
         $bStripped = strip_tags($b);
         similar_text($aStripped, $bStripped, $percentage);
 
-        if ($percentage >= $this->similarityThreshold) {
+        if ($percentage >= $localSimilarityThreshold) {
             return true;
         }
 
         // Check w/o stripped tags
         similar_text($a, $b, $percentage);
-        if ($percentage >= $this->similarityThreshold) {
+        if ($percentage >= $localSimilarityThreshold) {
             return true;
         }
 

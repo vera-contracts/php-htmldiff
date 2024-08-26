@@ -76,7 +76,7 @@ class ListDiffLines extends AbstractDiff
         }
 
         $this->lcsService = new LcsService(
-            new ListItemMatchStrategy($this->stringUtil, $this->config->getMatchThreshold())
+            new ListItemMatchStrategy($this->stringUtil)
         );
 
         return $this->listByLines($this->oldText, $this->newText);
