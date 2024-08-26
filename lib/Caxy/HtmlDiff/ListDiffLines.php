@@ -31,7 +31,7 @@ class ListDiffLines extends AbstractDiff
     protected static $listContentTags = [
         'h1', 'h2', 'h3', 'h4', 'h5', 'pre', 'div', 'br', 'hr', 'code',
         'input', 'form', 'img', 'span', 'a', 'i', 'b', 'strong', 'em',
-        'font', 'big', 'del', 'tt', 'sub', 'sup', 'strike',
+        'font', 'big', 'del', 'tt', 'sub', 'sup', 'strike', 'p', 'u', 's',
     ];
 
     /**
@@ -76,7 +76,7 @@ class ListDiffLines extends AbstractDiff
         }
 
         $this->lcsService = new LcsService(
-            new ListItemMatchStrategy($this->stringUtil, $this->config->getMatchThreshold())
+            new ListItemMatchStrategy($this->stringUtil)
         );
 
         return $this->listByLines($this->oldText, $this->newText);
