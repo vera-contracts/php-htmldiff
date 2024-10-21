@@ -370,6 +370,11 @@ class ListDiffLines extends AbstractDiff
         $this->setInnerHtml($newListNode, $output);
         $this->appendClassToNode($newListNode, 'diff-list');
 
+        if ($newListNode->hasAttribute('start')) {
+            $startValue = $newListNode->getAttribute('start');
+            $newListNode->setAttribute('style', sprintf('counter-reset: section %s', +$startValue - 1));
+        }
+
         return $newListNode->ownerDocument->saveHTML($newListNode);
     }
 
