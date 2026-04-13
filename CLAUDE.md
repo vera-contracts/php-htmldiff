@@ -4,6 +4,15 @@
 
 Fork of caxy/php-htmldiff — a PHP library that compares two HTML strings and produces a merged HTML output highlighting differences with `<ins>`/`<del>` tags and CSS classes (`diffins`, `diffdel`, `diffmod`).
 
+## Modifications
+
+This fork contains some specific modifications to the original project:
+
+- Unnecessary demo code was removed
+- The calculation of the similarity of list items in the ListItemMatchStrategy was changed to work better with the typical changes we see in this project
+- We allowed certain additional tags in list content
+- We added specific handling for when and how list counters are reset
+
 ## Commands
 
 ```bash
